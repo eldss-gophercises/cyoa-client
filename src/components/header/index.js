@@ -3,7 +3,9 @@ import style from './style.css';
 
 const Header = () => (
 	<header class={style.header}>
-		<h1>Preact App</h1>
+		<h1><a href="https://courses.calhoun.io/" target="_">
+			Gophercises - Choose Your Own Adventure
+		</a></h1>
 	</header >
 );
 
