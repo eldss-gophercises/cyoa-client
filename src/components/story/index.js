@@ -4,25 +4,70 @@ import style from './style.css';
 import Option from "./option";
 
 export default class Story extends Component {
+
+    state = {
+        title: '',
+        story: [],
+        options: [],
+    };
+
+    componentDidMount() {
+        // Get intro story for first render
+        this.fetchStoryArc("intro")
+    }
+
+    /**
+     * Gets a story arc from the backend service. On error, prints the
+     * err to the console.
+     * @param {string} arc The arc, or chapter, of the story to fetch.
+     */
+    fetchStoryArc = arc => {
+        const apiPath = 'http://localhost:8085/arc/';
+
+        fetch(apiPath + arc)
+            .then(data => {
+                return data.json();
+            })
+            .then(jsn => {
+                // Ensure all values are defined
+                const title = jsn.title ? jsn.title : '';
+                const story = jsn.story ? jsn.story : [];
+                const options = jsn.options ? jsn.options : [];
+                this.setState({ title, story, options });
+            })
+            .catch(err => console.error(err));
+    }
+
     render() {
+        const title = this.state.title;
+        const story = this.state.story.map((paragraph, index) => {
+            return <p key={index}>{paragraph}</p>;
+        });
+        const options = this.state.options.map((option, index) => {
+            return (
+                <Option
+                    key={index}
+                    getArcHandler={() => this.fetchStoryArc(option.arc)}
+                    text={option.text}
+                />
+            );
+        });
+
         return (
             <section class={style.story}>
-                <h2 class={style.title}>Lorem Ipsem</h2>
+
+                <h2 class={style.title}>
+                    {title}
+                </h2>
+
                 <div class={style.content}>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto aliquid blanditiis error libero totam exercitationem, at quasi harum natus facere. Reiciendis commodi atque at itaque, id deleniti architecto officiis quis!</p>
-                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Incidunt facere tempore odio nemo voluptatum, eaque aspernatur atque. Modi, nisi! Maiores quibusdam sint magni neque ad distinctio voluptate minus soluta enim!</p>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Error iure id architecto ea? Dolor laboriosam ipsam officia praesentium natus a minima quidem, tempore maiores. Maxime ut dolores optio debitis commodi.</p>
+                    {story}
                 </div>
+
                 <div class={style.options}>
-                    <Option
-                        getArcHandler={console.log}
-                        text="This is the option text"
-                    />
-                    <Option
-                        getArcHandler={console.log}
-                        text="This is the option text"
-                    />
+                    {options}
                 </div>
+
             </section>
         );
     }

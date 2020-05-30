@@ -1,4 +1,19 @@
 .option {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    max-width: 700px;
+}
+
+.option button {
+    padding: 0.5rem 2rem;
+    margin: 1rem;
+    border: none;
+    cursor: pointer;
+    background-color: #7fd5ea;
+    transition: background 250ms ease-in-out, transform 150ms ease;
+}
+
+.option button:active {
+    transform: scale(0.95);
 }

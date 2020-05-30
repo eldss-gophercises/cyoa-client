@@ -7,4 +7,6 @@
 
 .story .content {
     max-width: 900px;
+    margin-bottom: 1rem;
+    line-height: 1.25rem;
 }
